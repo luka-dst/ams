@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="800" height="800" role="img" aria-labelledby="title desc">
+<title id="title">Logo AMS</title>
+<desc id="desc">Logo noir et doré avec casque et visage stylisés, tracés repris du SVG fourni.</desc>
+<defs>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#fff1b0"/>
+    <stop offset="0.35" stop-color="#f2c744"/>
+    <stop offset="0.7" stop-color="#b8860b"/>
+    <stop offset="1" stop-color="#f7dc6f"/>
+  </linearGradient>
+  <radialGradient id="bg" cx="0.5" cy="0.45" r="0.7">
+    <stop offset="0" stop-color="#1f1f1f"/>
+    <stop offset="1" stop-color="#030303"/>
+  </radialGradient>
+  <radialGradient id="face" cx="0.4" cy="0.35" r="0.8">
+    <stop offset="0" stop-color="#2a2a2a"/>
+    <stop offset="1" stop-color="#080808"/>
+  </radialGradient>
+</defs>
+
+<!-- Fond rond -->
+<circle cx="200" cy="200" r="196" fill="url(#bg)"/>
+<circle cx="200" cy="200" r="192" fill="none" stroke="url(#gold)" stroke-width="5"/>
+
+<g transform="translate(20,0)">
+  <!-- Casque : arceau -->
+  <path d="M92 222 C92 140 140 112 180 112 C220 112 268 140 268 222"
+        fill="none" stroke="url(#gold)" stroke-width="13" stroke-linecap="round"/>
+  <!-- Casque : écouteurs -->
+  <rect x="78" y="178" width="30" height="82" rx="14" fill="url(#gold)"/>
+  <rect x="252" y="178" width="30" height="82" rx="14" fill="url(#gold)"/>
+
+  <!-- Visage -->
+  <circle cx="180" cy="208" r="76" fill="url(#face)" stroke="url(#gold)" stroke-width="4"/>
+
+  <!-- Sourcils (traits diagonaux) -->
+  <path d="M118 148 L158 192" stroke="#f7dc6f" stroke-width="5" stroke-linecap="round"/>
+  <path d="M242 148 L202 192" stroke="#f7dc6f" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Yeux en losange -->
+  <g fill="#0a0a0a" stroke="url(#gold)" stroke-width="8" stroke-linejoin="round">
+    <path d="M140 184 L166 210 L140 236 L114 210 Z"/>
+    <path d="M220 184 L246 210 L220 236 L194 210 Z"/>
+  </g>
+  <g fill="url(#gold)">
+    <path d="M140 198 L152 210 L140 222 L128 210 Z"/>
+    <path d="M220 198 L232 210 L220 222 L208 210 Z"/>
+  </g>
+
+  <!-- Nez / bouche -->
+  <ellipse cx="180" cy="252" rx="11" ry="9" fill="url(#gold)"/>
+</g>
+</svg>
