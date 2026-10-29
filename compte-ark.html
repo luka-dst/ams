@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0907">
+<title>Lier son compte ARK | AMS ASA PvP</title>
+<meta name="description" content="Associe les informations de ton compte ARK à ton espace joueur AMS ASA PvP.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://ams-asa-pvp.vercel.app/compte-ark.html">
+<meta property="og:site_name" content="AMS ASA PvP">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ams-asa-pvp.vercel.app/compte-ark.html">
+<meta property="og:title" content="Lier son compte ARK | AMS ASA PvP">
+<meta property="og:description" content="Associe les informations de ton compte ARK à ton espace joueur AMS ASA PvP.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lier son compte ARK | AMS ASA PvP">
+<meta name="twitter:description" content="Associe les informations de ton compte ARK à ton espace joueur AMS ASA PvP.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{color-scheme:dark;--gold:#e8c16a;--gold2:#ffe8a7;--muted:#b8b0a2;--panel:#11100d;--line:#46341b;--ink:#f5efe3}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 18% 12%,rgba(166,111,34,.13),transparent 34%),radial-gradient(ellipse at 88% 28%,rgba(232,193,106,.08),transparent 28%),#090908;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:inherit}
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:15px;padding:13px max(4%,calc((100% - 1200px)/2));background:rgba(9,9,8,.9);border-bottom:1px solid rgba(232,193,106,.24);backdrop-filter:blur(16px)}
+.menu-toggle{width:42px;height:42px;flex:0 0 42px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:#100e0b;border:1px solid #60471f;border-radius:5px;cursor:pointer}
+.menu-toggle span{display:block;width:21px;height:2px;background:linear-gradient(90deg,#b17a2a,#ffe8a7);border-radius:2px}
+.brand{display:flex;align-items:center;flex:0 0 auto}
+.ams-logo-img{width:122px;height:auto;display:block;object-fit:contain}
+.main-nav-links{display:flex;align-items:center;gap:7px;margin-left:auto;overflow-x:auto}
+.main-nav-links a{padding:10px 11px;border:1px solid transparent;border-radius:4px;text-decoration:none;white-space:nowrap;color:#d8d0c3;font-weight:800;font-size:10px;letter-spacing:1px}
+.main-nav-links a:hover,.main-nav-links a:focus-visible{border-color:#59421f;color:var(--gold2);background:#151109}
+.hero{text-align:center;max-width:860px;margin:0 auto;padding:62px 20px 24px}
+.eyebrow{color:var(--gold);font-size:10px;font-weight:900;letter-spacing:2.6px;text-transform:uppercase}
+h1{margin:13px 0;font-size:clamp(32px,6vw,54px);line-height:1.03;letter-spacing:-1.5px}
+h1 span,h2 span{color:var(--gold)}
+.hero p{color:var(--muted);line-height:1.7;margin:0 auto;max-width:650px}
+main{width:min(760px,calc(100% - 28px));margin:10px auto 70px}
+.panel{background:linear-gradient(150deg,rgba(24,21,16,.96),rgba(11,10,8,.98));border:1px solid var(--line);border-radius:9px;padding:clamp(20px,4vw,36px);box-shadow:0 22px 60px rgba(0,0,0,.35)}
+.auth-state{margin:0 0 20px;padding:14px 16px;border:1px solid #61491f;border-radius:6px;background:rgba(232,193,106,.07);color:#e9d8b4;line-height:1.6}
+.auth-state a{color:var(--gold2);font-weight:800}
+form{display:grid;gap:16px}
+label{display:block;margin-bottom:8px;color:#f2e8d5;font-size:12px;font-weight:850;letter-spacing:.6px}
+input{width:100%;min-height:50px;padding:13px 14px;border:1px solid #594222;border-radius:5px;background:#080807;color:#fff3d6;font:inherit;font-size:14px;outline:none}
+input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,193,106,.1)}
+.hint{margin:7px 0 0;color:#a9a091;font-size:12px;line-height:1.5}
+.btn{min-height:50px;display:inline-flex;justify-content:center;align-items:center;padding:13px 18px;background:linear-gradient(120deg,#8c6225,#e8c16a,#ffe8a7);border:1px solid #f6db91;border-radius:5px;color:#171007;font-weight:950;font-size:12px;letter-spacing:1px;text-decoration:none;cursor:pointer}
+.btn:disabled{opacity:.55;cursor:wait}
+.btn.secondary{background:#151109;border-color:#5b431f;color:var(--gold2)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.status{min-height:24px;margin:14px 0 0;color:#d4c8b1;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.status.error{color:#ffb6a8}.status.success{color:#b9e9c7}
+.saved{margin-top:18px;padding:17px;border:1px solid #4e3a1c;background:#0b0a08;border-radius:6px}
+.saved h3{margin:0 0 10px;font-size:13px;color:var(--gold2)}
+.saved-row{display:grid;grid-template-columns:130px minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px solid #292219;font-size:13px}
+.saved-row:last-child{border-bottom:0}
+.saved-row span:first-child{color:#a9a091}.saved-row span:last-child{overflow-wrap:anywhere}
+.privacy-note{margin:20px 0 0;color:#aaa294;font-size:12px;line-height:1.7}
+[hidden]{display:none!important}
+.menu-backdrop{display:none;position:fixed;inset:0;z-index:110;background:rgba(0,0,0,.75);backdrop-filter:blur(3px);align-items:stretch;justify-content:flex-start}
+.menu-backdrop.is-open{display:flex}
+.menu-drawer{width:min(340px,86vw);min-height:100%;padding:24px 18px;background:linear-gradient(145deg,#17130d,#090908);border-right:1px solid #6a4b20;box-shadow:20px 0 50px #0009;display:flex;flex-direction:column;gap:10px}
+.menu-drawer-head{display:flex;justify-content:space-between;align-items:center;color:#d9d1c1;letter-spacing:2px;font-weight:800;padding:7px 3px 22px;border-bottom:1px solid #49351a;margin-bottom:8px}
+.menu-drawer-head b{color:var(--gold)}
+.menu-close{background:transparent;border:1px solid #49351a;color:var(--gold);font-size:27px;line-height:1;width:38px;height:38px;border-radius:4px;cursor:pointer}
+.menu-drawer>a{display:flex;justify-content:space-between;align-items:center;padding:16px 14px;color:#eee5d5;text-decoration:none;background:#0d0b08;border:1px solid #3c2b16;border-radius:4px;font-weight:800;letter-spacing:.4px}
+.menu-drawer>a span{color:var(--gold)}
+.menu-drawer>a.menu-login-link{margin-top:auto;border-color:#8c672d;background:linear-gradient(135deg,#29200f,#120e08);color:#ffe8a7}
+.menu-drawer>a:hover{border-color:var(--gold);color:var(--gold2)}
+@media(max-width:760px){nav{padding:12px 4%;gap:9px}.menu-toggle{width:38px;height:38px;flex-basis:38px}.ams-logo-img{width:103px}.main-nav-links{gap:3px}.main-nav-links a{font-size:9px;padding:9px 8px}.hero{padding-top:42px}.saved-row{grid-template-columns:minmax(0,1fr);gap:4px}}
+@media(max-width:430px){.main-nav-links a{font-size:8px;padding:8px 6px}.main-nav-links a:nth-child(-n+3){display:none}.panel{padding:20px 16px}.actions{display:grid}.actions .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.menu-backdrop{transition:opacity .44s ease,visibility 0s linear .55s!important}.menu-backdrop.is-open{transition:opacity .44s ease,visibility 0s linear 0s!important}.menu-drawer{transition:transform .52s cubic-bezier(.22,.8,.22,1),opacity .45s ease!important;will-change:transform}.menu-drawer>a{transform:translateX(-8px) scale(.99)!important;transform-origin:left center;transition:opacity .32s ease,transform .32s cubic-bezier(.2,.8,.2,1),border-color .24s ease,background .24s ease,color .24s ease!important}.menu-backdrop.is-open .menu-drawer>a{transform:translateX(0) scale(1)!important}.menu-backdrop.is-open .menu-drawer>a:nth-of-type(1){transition-delay:.07s!important}.menu-backdrop.is-open .menu-drawer>a:nth-of-type(2){transition-delay:.12s!important}.menu-backdrop.is-open .menu-drawer>a:nth-of-type(3){transition-delay:.17s!important}.menu-backdrop.is-open .menu-drawer>a:nth-of-type(4){transition-delay:.22s!important}.menu-backdrop.is-open .menu-drawer>a:nth-of-type(5){transition-delay:.27s!important}.menu-backdrop.is-open .menu-drawer>a:nth-of-type(6){transition-delay:.32s!important}.menu-backdrop.is-open .menu-drawer>a:nth-of-type(7){transition-delay:.37s!important}.menu-backdrop.is-open .menu-drawer>a:nth-of-type(8){transition-delay:.42s!important}.menu-drawer>a:hover,.menu-drawer>a:focus-visible{transform:translateX(2px) scale(1.02)!important;border-color:#e8c16a!important;background:#e8c16a12!important;color:#fff0bd!important;transition-delay:0s!important;z-index:1}@media(prefers-reduced-motion:reduce){.menu-backdrop,.menu-backdrop.is-open,.menu-drawer,.menu-drawer>a,.menu-backdrop.is-open .menu-drawer>a,.menu-drawer>a:hover,.menu-drawer>a:focus-visible{transition:none!important;transform:none!important}}
+/* AMS FIX LISIBILITÉ : garder les animations sans flouter le contenu */
+.ams-reveal,
+.ams-reveal.is-visible,
+.ams-reveal.ams-inview,
+body.ams-motion-ready .ams-reveal:not(.ams-inview) {
+  filter: none !important;
+}
+
+</style>
+<style id="ams-halloween-style">
+/* AMS Halloween — noir et or conservés, détails saisonniers cuivrés */
+#ams-halloween-deco{position:fixed;inset:0;z-index:4;pointer-events:none;overflow:hidden;isolation:isolate}
+.ah-web{position:absolute;top:0;width:clamp(92px,15vw,178px);height:auto;fill:none;stroke:#bd8b45;stroke-width:1.05;opacity:.24;filter:drop-shadow(0 0 5px rgba(205,151,65,.12))}
+.ah-web-left{left:0}.ah-web-right{right:0;transform:scaleX(-1)}
+.ah-bat{position:absolute;fill:#d4a24f;opacity:.24;filter:drop-shadow(0 0 7px rgba(222,166,73,.2));animation:ah-fly 9s ease-in-out infinite alternate}
+.ah-bat-one{top:70px;left:24%;width:32px;animation-delay:-2s}
+.ah-bat-two{top:112px;left:68%;width:22px;opacity:.16;animation-delay:-5s}
+.ah-bat-three{top:48px;left:82%;width:16px;opacity:.14;animation-delay:-1s}
+.ah-pumpkin{position:absolute;right:14px;bottom:14px;width:clamp(48px,7vw,78px);height:auto;opacity:.12;filter:drop-shadow(0 0 10px rgba(202,119,36,.14))}
+@keyframes ah-fly{0%{translate:0 0;rotate:-5deg}100%{translate:20px 13px;rotate:5deg}}
+@media(max-width:650px){.ah-web{width:92px;opacity:.18}.ah-bat-one{top:72px;left:36%;width:24px}.ah-bat-two{top:118px;left:72%;width:17px}.ah-bat-three{display:none}.ah-pumpkin{right:4px;bottom:5px;width:44px;opacity:.08}}
+@media(prefers-reduced-motion:reduce){.ah-bat{animation:none}}
+</style><style id="ams-halloween-boost">
+/* AMS Halloween — citrouilles dorées, cuivre et orange braisé */
+:root{--g:#ffc45c!important;--g2:#d97821!important;--line:#774019!important;--mut:#c5b6a3!important}
+body{background-color:#080604!important;background-image:radial-gradient(ellipse at 50% 0,rgba(178,69,14,.25),transparent 46%),radial-gradient(ellipse at 5% 48%,rgba(203,111,22,.08),transparent 30%),radial-gradient(ellipse at 95% 70%,rgba(103,40,9,.11),transparent 32%)!important}
+nav{border-bottom-color:#a45e23!important;background:linear-gradient(180deg,rgba(25,12,7,.98),rgba(8,7,6,.97))!important;box-shadow:0 8px 25px #0009,0 1px 0 #ffb23b20!important}
+.brand,.eyebrow,h1 span,h2 span{filter:drop-shadow(0 0 9px rgba(238,145,43,.18))}
+button,.btn,.button,[type="submit"],a.cta{border-color:rgba(255,174,61,.44)!important}
+button:hover,.btn:hover,.button:hover,[type="submit"]:hover,a.cta:hover{box-shadow:0 0 20px rgba(245,129,28,.18)!important}
+.panel,.card,.box,.stat-card,.event-card,.mod-card,.auth-card{border-color:rgba(223,130,39,.4)!important;box-shadow:0 12px 38px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,187,81,.035)}
+/* Ruban saisonnier visible en haut de toutes les pages */
+.ah-halloween-ribbon{position:relative;z-index:12;min-height:39px;padding:7px 14px;display:flex;align-items:center;justify-content:center;gap:12px;background:linear-gradient(100deg,#1a0b05 0%,#3a1708 35%,#261007 68%,#100905 100%);border-bottom:1px solid #d7842a;box-shadow:0 4px 17px rgba(197,85,17,.2),inset 0 1px 0 rgba(255,199,99,.12);color:#ffe0a0;font:800 10px/1.35 Arial,sans-serif;letter-spacing:2.1px;text-align:center}
+.ah-ribbon-copy{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap}
+.ah-ribbon-copy strong{color:#ffb545;font-size:11px;letter-spacing:3px}
+.ah-ribbon-separator{color:#db791c}
+.ah-ribbon-tag{font-size:8px;font-weight:900;letter-spacing:1.4px;color:#17100a;background:linear-gradient(90deg,#e68b2b,#ffd47b);padding:4px 7px;border-radius:2px}
+.ah-ribbon-pumpkin{display:inline-flex;width:25px;height:25px;flex:0 0 25px;filter:drop-shadow(0 0 6px rgba(255,156,47,.42));animation:ah-pumpkin-glow 3.2s ease-in-out infinite alternate}
+.ah-ribbon-pumpkin svg{width:100%;height:100%}
+@keyframes ah-pumpkin-glow{from{filter:drop-shadow(0 0 3px rgba(255,156,47,.25));transform:rotate(-3deg)}to{filter:drop-shadow(0 0 9px rgba(255,156,47,.65));transform:rotate(3deg)}}
+/* On rend les toiles, chauves-souris et citrouilles déjà présentes nettement visibles */
+#ams-halloween-deco{z-index:4}
+.ah-web{stroke:#e4a24d!important;stroke-width:1.3!important;opacity:.42!important;filter:drop-shadow(0 0 7px rgba(235,145,42,.24))!important}
+.ah-bat{fill:#f0a33d!important;opacity:.5!important;filter:drop-shadow(0 0 9px rgba(235,125,28,.4))!important}
+.ah-bat-one{width:39px!important}.ah-bat-two{width:27px!important;opacity:.34!important}.ah-bat-three{width:20px!important;opacity:.28!important}
+.ah-pumpkin{width:clamp(64px,8vw,98px)!important;opacity:.34!important;filter:drop-shadow(0 0 15px rgba(255,139,34,.38))!important}
+.ah-pumpkin-two{left:20px!important;right:auto!important;bottom:30px!important;transform:rotate(-10deg);opacity:.3!important}
+.ah-pumpkin-three{right:14%!important;top:36%!important;bottom:auto!important;width:clamp(44px,5vw,65px)!important;opacity:.23!important;transform:rotate(9deg)}
+/* Quelques touches orange qui font plus Halloween que simple noir et or */
+::selection{background:#bd651b;color:#fff4dc}
+a:hover{ text-shadow:0 0 11px rgba(246,148,45,.18)}
+@media(max-width:650px){
+ .ah-halloween-ribbon{min-height:36px;padding:6px 8px;gap:7px;letter-spacing:1px;font-size:9px}
+ .ah-ribbon-pumpkin{width:21px;height:21px;flex-basis:21px}
+ .ah-ribbon-tag{font-size:7px;padding:3px 5px}
+ .ah-web{width:108px!important;opacity:.28!important}
+ .ah-bat-one{top:76px;left:32%;width:27px!important}
+ .ah-bat-two{top:116px;left:74%;width:19px!important}
+ .ah-bat-three{display:block!important;width:15px!important}
+ .ah-pumpkin{width:58px!important;opacity:.27!important}
+ .ah-pumpkin-two{left:3px!important;bottom:24px!important;width:44px!important;opacity:.26!important}
+ .ah-pumpkin-three{right:4%!important;top:24%!important;width:38px!important;opacity:.17!important}
+}
+@media(prefers-reduced-motion:reduce){.ah-ribbon-pumpkin{animation:none}}
+</style><style id="ams-motion-polish">
+/* AMS Motion System — transitions fluides, légères et adaptées à tous les écrans */
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{overflow-x:clip;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img,svg,video,canvas{max-width:100%}
+button,a,[role="button"],input,select,textarea{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid #ffc45c!important;outline-offset:3px}
+:where(button,.btn,.button,[type="submit"],a.cta,.hero-actions .btn,.actions .btn){
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .24s ease,border-color .24s ease,background-color .24s ease,color .24s ease,filter .24s ease;
+}
+:where(button,.btn,.button,[type="submit"],a.cta,.hero-actions .btn,.actions .btn):active{transform:translateY(1px) scale(.985)}
+:where(.panel,.card,.tile,.work-card,.offer,.stat-card,.event-card,.mod-card,.map-card,.connect,.topserver-card-wrap,.summary){
+  transition:transform .32s cubic-bezier(.2,.8,.2,1),border-color .3s ease,box-shadow .32s ease,background-color .32s ease;
+}
+@media(hover:hover) and (pointer:fine){
+  :where(.panel,.card,.tile,.work-card,.offer,.stat-card,.event-card,.mod-card,.map-card,.connect,.topserver-card-wrap):hover{
+    transform:translateY(-4px);
+    border-color:rgba(255,174,61,.65)!important;
+    box-shadow:0 16px 36px rgba(0,0,0,.32),0 0 22px rgba(214,111,29,.07);
+  }
+  :where(button,.btn,.button,[type="submit"],a.cta,.hero-actions .btn,.actions .btn):hover{
+    transform:translateY(-2px);
+    filter:brightness(1.045);
+  }
+}
+.hero-dot{animation:ams-dot-breathe 2.8s ease-in-out infinite}
+@keyframes ams-dot-breathe{0%,100%{box-shadow:0 0 7px rgba(255,196,92,.35);opacity:.78}50%{box-shadow:0 0 17px rgba(255,155,53,.85);opacity:1}}
+/* Apparitions au défilement. Si le JavaScript ou l'API n'est pas disponible, le contenu reste visible. */
+.ams-reveal{--ams-stagger:0ms}
+body.ams-motion-ready .ams-reveal:not(.ams-inview){opacity:0;transform:translateY(16px) scale(.995)}
+.ams-reveal.ams-inview{opacity:1;transform:translateY(0) scale(1);transition:opacity .58s ease var(--ams-stagger),transform .68s cubic-bezier(.2,.75,.25,1) var(--ams-stagger)}
+/* Un peu plus d'air tactile sur les petits écrans */
+@media(max-width:760px){
+  html{scroll-padding-top:72px}
+  :where(button,.btn,.button,[type="submit"],a.cta){min-height:42px}
+  .hero,.hero-premium{scroll-margin-top:72px}
+  :where(.panel,.card,.tile,.work-card,.offer,.stat-card,.event-card,.mod-card,.map-card,.connect,.topserver-card-wrap):hover{transform:none}
+}
+@media(max-width:520px){
+  input,select,textarea{font-size:16px!important}
+  .hero-actions,.actions{gap:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+  body.ams-motion-ready .ams-reveal:not(.ams-inview){opacity:1!important;transform:none!important}
+  .ams-reveal.ams-inview{opacity:1!important;transform:none!important}
+}
+</style></head>
+<body><div class="ah-halloween-ribbon" role="note" aria-label="Édition Halloween AMS"><span class="ah-ribbon-pumpkin"><svg viewBox="0 0 48 42" aria-hidden="true"><defs><linearGradient id="ribbonPumpkinGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe7a0"/><stop offset=".45" stop-color="#ffae32"/><stop offset="1" stop-color="#c96317"/></linearGradient></defs><path d="M24 10C17 3 10 8 9 13 2 12 0 21 4 29c4 8 11 10 20 9 9 1 16-1 20-9 4-8 2-17-5-16-1-5-8-10-15-3Z" fill="url(#ribbonPumpkinGold)" stroke="#ffe2a0" stroke-width="1.3"/><path d="M24 11c-3 7-3 18 0 27M12 14c-3 6-2 15 4 21M36 14c3 6 2 15-4 21M24 10c-2-5 1-8 5-8" fill="none" stroke="#7d350e" stroke-width="1.4" stroke-linecap="round"/><path d="m13 23 5 3-5 2m22-5-5 3 5 2M17 31q7 5 14 0" fill="none" stroke="#321305" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="ah-ribbon-copy"><strong>AMS</strong><span class="ah-ribbon-separator">✦</span> ÉDITION HALLOWEEN <span class="ah-ribbon-tag">SPOOKY SEASON</span></span><span class="ah-ribbon-pumpkin"><svg viewBox="0 0 48 42" aria-hidden="true"><defs><linearGradient id="ribbonPumpkinGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe7a0"/><stop offset=".45" stop-color="#ffae32"/><stop offset="1" stop-color="#c96317"/></linearGradient></defs><path d="M24 10C17 3 10 8 9 13 2 12 0 21 4 29c4 8 11 10 20 9 9 1 16-1 20-9 4-8 2-17-5-16-1-5-8-10-15-3Z" fill="url(#ribbonPumpkinGold)" stroke="#ffe2a0" stroke-width="1.3"/><path d="M24 11c-3 7-3 18 0 27M12 14c-3 6-2 15 4 21M36 14c3 6 2 15-4 21M24 10c-2-5 1-8 5-8" fill="none" stroke="#7d350e" stroke-width="1.4" stroke-linecap="round"/><path d="m13 23 5 3-5 2m22-5-5 3 5 2M17 31q7 5 14 0" fill="none" stroke="#321305" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div id="ams-halloween-deco" aria-hidden="true"><svg class="ah-pumpkin ah-pumpkin-two" viewBox="0 0 90 82" aria-hidden="true"><defs><linearGradient id="goldPumpkin2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffdc76"/><stop offset=".55" stop-color="#d98222"/><stop offset="1" stop-color="#7e3b12"/></linearGradient></defs><path d="M45 17C36 8 25 13 20 21 9 18 2 29 5 43 8 61 22 72 45 72S82 61 85 43C88 29 81 18 70 21 65 13 54 8 45 17Z" fill="url(#goldPumpkin2)" stroke="#ffcf66" stroke-width="2.2"/><path d="M45 18C39 30 39 56 45 71M24 23C18 35 22 57 32 68M66 23C72 35 68 57 58 68M45 17C43 10 46 5 53 4" fill="none" stroke="#71330e" stroke-width="2.2" stroke-linecap="round"/><path d="m24 40 9 5-9 5Zm42 0-9 5 9 5Z" fill="#231007"/><path d="M29 54q16 17 32 0l-4 9H33Z" fill="#231007"/><path d="M33 57v5m8-2v7m8-7v7m8-10v5" stroke="#ffc85e" stroke-width="1.2"/></svg>
+<svg class="ah-pumpkin ah-pumpkin-three" viewBox="0 0 90 82" aria-hidden="true"><defs><linearGradient id="goldPumpkin3" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe6a0"/><stop offset=".48" stop-color="#e9982c"/><stop offset="1" stop-color="#8e4817"/></linearGradient></defs><path d="M45 17C36 8 25 13 20 21 9 18 2 29 5 43 8 61 22 72 45 72S82 61 85 43C88 29 81 18 70 21 65 13 54 8 45 17Z" fill="url(#goldPumpkin3)" stroke="#f8c65d" stroke-width="2.2"/><path d="M45 18C39 30 39 56 45 71M24 23C18 35 22 57 32 68M66 23C72 35 68 57 58 68M45 17C43 10 46 5 53 4" fill="none" stroke="#71330e" stroke-width="2.2" stroke-linecap="round"/><path d="m25 42 7 3-7 3m40-6-7 3 7 3" fill="none" stroke="#2a1005" stroke-width="2.5" stroke-linecap="round"/><path d="M30 55q15 12 30 0l-4 8H34Z" fill="#2a1005"/><path d="M36 58v4m8-2v4m8-4v-2" stroke="#ffcc67" stroke-width="1.2"/></svg>
+<svg class="ah-web ah-web-left" viewBox="0 0 180 180"><g stroke-linecap="round"><path d="M0 0H180M0 0V180M0 0L180 35M0 0L180 78M0 0L180 125M0 0L40 180M0 0L83 180M0 0L128 180"/><path d="M0 26Q13 14 26 0M0 51Q26 26 51 0M0 77Q39 39 77 0M0 103Q51 51 103 0M0 129Q65 65 129 0M0 155Q78 78 155 0M26 0Q18 18 0 26M51 0Q35 35 0 51M77 0Q52 52 0 77M103 0Q69 69 0 103M129 0Q86 86 0 129M155 0Q103 103 0 155"/></g></svg>
+<svg class="ah-web ah-web-right" viewBox="0 0 180 180"><g stroke-linecap="round"><path d="M0 0H180M0 0V180M0 0L180 35M0 0L180 78M0 0L180 125M0 0L40 180M0 0L83 180M0 0L128 180"/><path d="M0 26Q13 14 26 0M0 51Q26 26 51 0M0 77Q39 39 77 0M0 103Q51 51 103 0M0 129Q65 65 129 0M0 155Q78 78 155 0"/></g></svg>
+<svg class="ah-bat ah-bat-one" viewBox="0 0 64 32"><path d="M32 11C25 1 15 0 8 4L0 0 4 13 1 20 13 16 21 25 29 19 32 27 35 19 43 25 51 16 63 20 60 13 64 0 56 4C49 0 39 1 32 11Z"/></svg>
+<svg class="ah-bat ah-bat-two" viewBox="0 0 64 32"><path d="M32 11C25 1 15 0 8 4L0 0 4 13 1 20 13 16 21 25 29 19 32 27 35 19 43 25 51 16 63 20 60 13 64 0 56 4C49 0 39 1 32 11Z"/></svg>
+<svg class="ah-bat ah-bat-three" viewBox="0 0 64 32"><path d="M32 11C25 1 15 0 8 4L0 0 4 13 1 20 13 16 21 25 29 19 32 27 35 19 43 25 51 16 63 20 60 13 64 0 56 4C49 0 39 1 32 11Z"/></svg>
+<svg class="ah-pumpkin" viewBox="0 0 90 82"><path d="M45 17C36 8 25 13 20 21 9 18 2 29 5 43 8 61 22 72 45 72S82 61 85 43C88 29 81 18 70 21 65 13 54 8 45 17Z" fill="#a56a2b" stroke="#d6a450" stroke-width="2.2"/><path d="M45 18C39 30 39 56 45 71M24 23C18 35 22 57 32 68M66 23C72 35 68 57 58 68M45 17C43 10 46 5 53 4" fill="none" stroke="#d6a450" stroke-width="2.2" stroke-linecap="round"/><path d="M25 42l7 3-7 3M65 42l-7 3 7 3" fill="none" stroke="#17110a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div>
+<nav>
+<button class="menu-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="ams-menu"><span></span><span></span><span></span></button>
+<a class="brand" href="/"><img class="ams-logo-img" src="https://ams-ark-site-8lu9oc7jw-lukaprime59-4946s-projects.vercel.app/ams-logo.webp" alt="Logo AMS"></a>
+<div class="main-nav-links">
+<a href="/">ACCUEIL</a><a href="/evenements.html">ÉVÉNEMENTS</a><a href="/statut.html">STATUT</a><a href="/compte-ark.html">LIER ARK</a><a href="/connexion.html">COMPTE</a>
+</div>
+</nav>
+<div class="menu-backdrop" id="ams-menu" aria-hidden="true">
+<aside class="menu-drawer" role="dialog" aria-modal="true" aria-label="Menu AMS">
+<div class="menu-drawer-head"><span>MENU <b>AMS</b></span><button class="menu-close" type="button" aria-label="Fermer le menu">×</button></div>
+<a href="/">Infos serveur <span>↗</span></a>
+<a href="/statut.html">Statut serveur <span>↗</span></a>
+<a href="/mods.html">Mods <span>↗</span></a>
+<a href="/topserver.html">TopServer <span>↗</span></a><a href="/rejoindre.html">Rejoindre AMS <span>↗</span></a>
+<a href="/compte-ark.html">Lier mon compte ARK <span>↗</span></a>
+<a class="menu-login-link" href="/connexion.html">Se connecter <span>↗</span></a>
+</aside>
+</div>
+<header class="hero">
+<div class="eyebrow">ESPACE JOUEUR · AMS COMMUNITY</div>
+<h1>LIER MON COMPTE <span>ARK</span></h1>
+<p>Associe ton compte AMS à ton survivant ARK: Survival Ascended avec l’EOS ID et le numéro affiché sur son implant.</p>
+</header>
+<main>
+<section class="panel">
+<div id="needsLogin" hidden>
+<div class="auth-state"><strong>Connexion requise.</strong><br>Connecte-toi à ton compte AMS pour enregistrer les informations de ton survivant.</div>
+<div class="actions"><a class="btn" href="/connexion.html?next=%2Fcompte-ark.html">SE CONNECTER / CRÉER UN COMPTE</a><a class="btn secondary" href="/">RETOUR À L’ACCUEIL</a></div>
+</div>
+<div id="linkApp" hidden>
+<div class="auth-state" id="signedInAs"></div>
+<form id="arkLinkForm" novalidate>
+<div>
+<label for="eosId">EOS ID</label>
+<input id="eosId" name="eosId" type="text" inputmode="text" autocomplete="off" spellcheck="false" maxlength="64" placeholder="Colle ici ton EOS ID" required>
+<p class="hint">L’EOS ID est un identifiant de 32 caractères. Sur PC, tu peux généralement l’afficher avec la commande <strong>whoami</strong> dans la console du jeu.</p>
+</div>
+<div>
+<label for="implantNumber">NUMÉRO DE L’IMPLANT</label>
+<input id="implantNumber" name="implantNumber" type="text" inputmode="numeric" autocomplete="off" maxlength="20" pattern="[0-9]*" placeholder="Uniquement les chiffres de l’implant" required>
+<p class="hint">Ouvre l’inventaire de ton survivant et recopie le numéro numérique affiché sur l’implant, sans espace ni symbole.</p>
+</div>
+<button id="saveArkLink" class="btn" type="submit">ENREGISTRER LA LIAISON</button>
+</form>
+<div id="linkStatus" class="status" role="status" aria-live="polite"></div>
+<div id="savedLink" class="saved" hidden>
+<h3>INFORMATIONS ENREGISTRÉES</h3>
+<div class="saved-row"><span>EOS ID</span><span id="savedEos"></span></div>
+<div class="saved-row"><span>Numéro d’implant</span><span id="savedImplant"></span></div>
+<div class="saved-row"><span>Dernière modification</span><span id="savedAt"></span></div>
+<button id="removeArkLink" type="button" class="btn secondary" style="margin-top:14px">RETIRER LA LIAISON</button>
+</div>
+<p class="privacy-note">Les informations sont enregistrées dans les métadonnées de ton compte AMS. Cette page ne vérifie pas automatiquement que l’EOS ID ou le numéro d’implant appartiennent bien à ton personnage : la vérification par les données du serveur ARK n’est pas encore connectée. N’inscris jamais ton mot de passe du jeu ici.</p>
+</div>
+</section>
+</main>
+<script>
+(function(){
+ const toggle=document.querySelector('.menu-toggle');
+ const backdrop=document.getElementById('ams-menu');
+ if(!toggle||!backdrop)return;
+ const firstLink=backdrop.querySelector('.menu-drawer>a');
+ const closeButton=backdrop.querySelector('.menu-close');
+ const close=(returnFocus=false)=>{
+  backdrop.classList.remove('is-open');backdrop.setAttribute('aria-hidden','true');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Ouvrir le menu');document.body.style.overflow='';if(returnFocus)toggle.focus({preventScroll:true});
+ };
+ const open=()=>{
+  backdrop.classList.add('is-open');backdrop.setAttribute('aria-hidden','false');toggle.setAttribute('aria-expanded','true');toggle.setAttribute('aria-label','Fermer le menu');document.body.style.overflow='hidden';window.setTimeout(()=>{if(backdrop.classList.contains('is-open')&&firstLink)firstLink.focus({preventScroll:true});},100);
+ };
+ toggle.addEventListener('click',()=>backdrop.classList.contains('is-open')?close(true):open());
+ if(closeButton)closeButton.addEventListener('click',()=>close(true));
+ backdrop.addEventListener('click',e=>{if(e.target===backdrop)close(true);});
+ document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&backdrop.classList.contains('is-open'))close(true);
+  if(e.key==='Tab'&&backdrop.classList.contains('is-open')){
+   const focusable=[...backdrop.querySelectorAll('button,a[href]')];if(!focusable.length)return;
+   const first=focusable[0],last=focusable[focusable.length-1];
+   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+   else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+  }
+ });
+})();
+</script>
+<script>
+(function(){
+ const SUPABASE_URL='https://eimcqldsjjtzmggoihen.supabase.co';
+ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpbWNxbGRzamp0em1nZ29paGVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNzE0ODQsImV4cCI6MjEwODY0NzQ4NH0.gEKK-vmL3Ys6lfyOgfz6maIo9q3OzoO68zDYR0TL82c';
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+ const needsLogin=document.getElementById('needsLogin');
+ const linkApp=document.getElementById('linkApp');
+ const signedInAs=document.getElementById('signedInAs');
+ const form=document.getElementById('arkLinkForm');
+ const eosInput=document.getElementById('eosId');
+ const implantInput=document.getElementById('implantNumber');
+ const saveButton=document.getElementById('saveArkLink');
+ const status=document.getElementById('linkStatus');
+ const saved=document.getElementById('savedLink');
+ const savedEos=document.getElementById('savedEos');
+ const savedImplant=document.getElementById('savedImplant');
+ const savedAt=document.getElementById('savedAt');
+ const removeButton=document.getElementById('removeArkLink');
+ let activeSession=null;
+ const setStatus=(message,type)=>{
+  status.textContent=message||'';status.classList.remove('error','success');if(type)status.classList.add(type);
+ };
+ const renderLink=(link)=>{
+  const hasLink=!!(link&&link.eosId&&link.implantNumber);
+  saved.hidden=!hasLink;
+  if(!hasLink)return;
+  savedEos.textContent=link.eosId;
+  savedImplant.textContent=link.implantNumber;
+  const date=link.updatedAt?new Date(link.updatedAt):null;
+  savedAt.textContent=date&&!Number.isNaN(date.valueOf())?date.toLocaleString('fr-FR'):'—';
+  eosInput.value=link.eosId;
+  implantInput.value=link.implantNumber;
+ };
+ const showSession=async(session)=>{
+  activeSession=session||null;
+  needsLogin.hidden=!!session;
+  linkApp.hidden=!session;
+  if(!session)return;
+  const email=session.user?.email||'Session AMS active';
+  signedInAs.textContent='Connecté : '+email+'. Tu peux enregistrer ton EOS ID et ton numéro d’implant ici.';
+  renderLink(session.user?.user_metadata?.ams_ark_link||null);
+ };
+ const loadSession=async()=>{
+  const {data,error}=await client.auth.getSession();
+  if(error){needsLogin.hidden=false;linkApp.hidden=true;return;}
+  await showSession(data.session);
+ };
+ form.addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  if(!activeSession){setStatus('Ta session AMS a expiré. Reconnecte-toi pour continuer.','error');return;}
+  const eosId=eosInput.value.trim().replace(/\s+/g,'');
+  const implantNumber=implantInput.value.trim();
+  if(!/^[a-fA-F0-9]{32}$/.test(eosId)){
+   setStatus('L’EOS ID semble incorrect : vérifie qu’il contient les 32 caractères de ton identifiant.','error');eosInput.focus();return;
+  }
+  if(!/^\d{1,20}$/.test(implantNumber)){
+   setStatus('Le numéro d’implant doit contenir uniquement les chiffres affichés sur ton implant.','error');implantInput.focus();return;
+  }
+  saveButton.disabled=true;setStatus('Enregistrement en cours…');
+  try{
+   const {data:{user},error:userError}=await client.auth.getUser();
+   if(userError||!user)throw new Error('Session introuvable. Reconnecte-toi à ton compte AMS.');
+   const oldMetadata=user.user_metadata||{};
+   const nextMetadata={...oldMetadata,ams_ark_link:{eosId:eosId.toLowerCase(),implantNumber:implantNumber,updatedAt:new Date().toISOString(),status:'submitted'}};
+   const {data,error}=await client.auth.updateUser({data:nextMetadata});
+   if(error)throw error;
+   activeSession={...activeSession,user:data.user||{...user,user_metadata:nextMetadata}};
+   await showSession(activeSession);
+   setStatus('Informations enregistrées sur ton compte AMS. La vérification de propriété reste manuelle pour le moment.','success');
+  }catch(err){
+   setStatus(err?.message||'Impossible d’enregistrer la liaison pour le moment.','error');
+  }finally{saveButton.disabled=false;}
+ });
+ removeButton.addEventListener('click',async()=>{
+  if(!activeSession)return;
+  removeButton.disabled=true;setStatus('Retrait de la liaison en cours…');
+  try{
+   const {data:{user},error:userError}=await client.auth.getUser();
+   if(userError||!user)throw new Error('Session introuvable. Reconnecte-toi à ton compte AMS.');
+   const nextMetadata={...(user.user_metadata||{})};delete nextMetadata.ams_ark_link;
+   const {data,error}=await client.auth.updateUser({data:nextMetadata});
+   if(error)throw error;
+   activeSession={...activeSession,user:data.user||{...user,user_metadata:nextMetadata}};
+   await showSession(activeSession);setStatus('Liaison retirée de ton compte AMS.','success');
+  }catch(err){setStatus(err?.message||'Impossible de retirer la liaison.','error');}
+  finally{removeButton.disabled=false;}
+ });
+ client.auth.onAuthStateChange((event,session)=>{showSession(session);});
+ loadSession();
+})();
+</script>
+
+<script id="ams-motion-system">
+(function(){
+  try{
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce || !('IntersectionObserver' in window)) return;
+    var selector = '.hero, .hero-premium, main > section, .panel, .card, .tile, .work-card, .offer, .spec, .connect, .missing > div, .topserver-card-wrap, .auth-card, .saved-row, .summary, .stat-card, .event-card, .mod-card, .map-card';
+    var items = Array.prototype.slice.call(document.querySelectorAll(selector));
+    var filtered = [];
+    items.forEach(function(el){
+      if(el.closest('#ams-halloween-deco, nav, .menu-backdrop, footer, .ah-halloween-ribbon')) return;
+      if(filtered.indexOf(el) !== -1) return;
+      filtered.push(el);
+    });
+    if(!filtered.length) return;
+    filtered.forEach(function(el,i){
+      el.classList.add('ams-reveal');
+      el.style.setProperty('--ams-stagger', (Math.min(i%5,4)*65)+'ms');
+    });
+    document.body.classList.add('ams-motion-ready');
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('ams-inview');
+          observer.unobserve(entry.target);
+        }
+      });
+    },{root:null,rootMargin:'0px 0px -7% 0px',threshold:0.06});
+    filtered.forEach(function(el){observer.observe(el)});
+    // Ne laisse jamais un élément masqué si un navigateur bloque l'observation.
+    window.addEventListener('pageshow',function(){
+      if(document.visibilityState==='visible'){
+        filtered.forEach(function(el){
+          if(el.getBoundingClientRect().top < window.innerHeight * .92) el.classList.add('ams-inview');
+        });
+      }
+    },{once:true,passive:true});
+  }catch(e){
+    document.body.classList.remove('ams-motion-ready');
+  }
+})();
+</script></body>
+</html>
